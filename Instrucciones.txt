@@ -1,0 +1,17 @@
+ instala
+sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+
+Inicia
+dfx start --background
+dfx deploy
+
+Instala
+npm install @dfinity/agent @dfinity/candid
+
+Reemplaza
+ your-canister-id con el ID de tu canister. Puedes obtenerlo ejecutando dfx canister id <nombre_del_canister>.
+
+Compila
+dfx build
+dfx deploy
+

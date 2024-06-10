@@ -1,0 +1,35 @@
+{
+  "name": "mvc",
+  "version": "0.2.1",
+  "license": "MIT",
+  "author": "Wazz",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "keywords": [
+    "azle",
+    "dapps",
+    "express",
+    "icp",
+    "internet computer",
+    "nextjs",
+    "react",
+    "rest",
+    "rest api",
+    "sqlite",
+    "typeorm",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "preclean": "dfx stop && turbo run clean",
+    "clean": "rm -rf .azle && rm -rf .dfx && rm -rf .turbo && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "prettier": "^3.2.5",
+    "turbo": "^1.13.3",
+    "dev": "node server.js"
+  }
+}

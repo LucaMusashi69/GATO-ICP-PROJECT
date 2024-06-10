@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gato - Un jugador</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Instrucciones para jugar Gato</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Cómo jugar:</h5>
+                        <p class="card-text">El Gato, también conocido como Tic Tac Toe, es un juego de lápiz y papel entre dos jugadores: X y O, que marcan los espacios en un tablero de 3x3 alternadamente. El jugador que logre colocar tres de sus marcas en línea horizontal, vertical o diagonal, gana la partida.</p>
+                        <h5 class="card-title">Reglas:</h5>
+                        <ul class="card-text">
+                            <li>Los jugadores eligen alternativamente una casilla para colocar su marca, que puede ser una "X" o una "O".</li>
+                            <li>El juego termina cuando un jugador logra formar una línea horizontal, vertical o diagonal con tres de sus marcas, o si todas las casillas están llenas sin que se forme una línea.</li>
+                            <li>Si ningún jugador logra formar una línea y aún quedan casillas vacías, se declara empate.</li>
+                        </ul>
+                        <h5 class="card-title">Cómo jugar en este sitio:</h5>
+                        <ol class="card-text">
+                            <li>Ingresa tu nombre en el siguiente campo y presiona "Continuar".</li>
+                            <li>Selecciona una casilla haciendo clic en ella para colocar tu marca.</li>
+                            <li>Disfruta del juego y ¡buena suerte!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <!-- Formulario para ingresar el nombre del jugador -->
+                <form id="playerForm" onsubmit="return handlePlayerFormSubmit()">
+                    <div class="mb-3">
+                        <label for="playerName" class="form-label">Nombre de jugador:</label>
+                        <input type="text" class="form-control" id="playerName" placeholder="Ingresa tu nombre" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Continuar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlace a Bootstrap JS (opcional, si necesitas funcionalidades de Bootstrap) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+V5Aq+6qAOWCrEN0L4/3O5j8q0AC5b5K8HFeGUgllUyX5Z6QUpJvAB7jzK" crossorigin="anonymous"></script>
+    
+    <!-- Enlace a @dfinity/agent -->
+    <script src="https://unpkg.com/@dfinity/agent@latest/dist/agent.min.js"></script>
+
+    <script>
+        const { Actor, HttpAgent } = require('@dfinity/agent');
+        
+        async function handlePlayerFormSubmit() {
+            const playerName = document.getElementById('playerName').value;
+
+            // Asignar nombre aleatorio al NPC
+            const npcNames = ['NPC1', 'NPC2', 'NPC3', 'NPC4'];
+            const npcName = npcNames[Math.floor(Math.random() * npcNames.length)];
+
+            // Asignar roles aleatorios
+            const roles = ['Gato', 'Ratón'];
+            const playerRole = roles[Math.floor(Math.random() * roles.length)];
+            const npcRole = playerRole === 'Gato' ? 'Ratón' : 'Gato';
+
+            // Guardar los nombres y roles en Motoko
+            await guardarNombre(playerName, npcName, playerRole, npcRole);
+
+            // Redirigir a la página de dificultad
+            window.location.href = 'Dificultad.html';
+            return false; // Evitar que el formulario se envíe
+        }
+
+        async function guardarNombre(playerName, npcName, playerRole, npcRole) {
+            // Configura el agente para el entorno de desarrollo local
+            const agent = new HttpAgent({ host: 'http://localhost:8000' });
+            await agent.fetchRootKey();
+
+            // Crea el actor para el canister
+            const canisterId = 'your-canister-id';
+            const actor = Actor.createActor({
+                "candid": `
+                type Jugador = record { nombre : text; simbolo : text };
+                actor {
+                    public func guardarNombre(player: text, npc: text, playerRole: text, npcRole: text): async () {};
+                    public query func obtenerDatos(): async (text, text, text, text) {};
+                }
+                `,
+                "canisterId": canisterId,
+            }, { agent });
+
+            // Llama a la función guardarNombre en el canister
+            await actor.guardarNombre(playerName, npcName, playerRole, npcRole);
+        }
+    </script>
+</body>
+</html>

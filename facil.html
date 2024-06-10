@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modo facil</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            border: 2px solid #19ff04;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cell:hover {
+            transform: scale(1.1);
+        }
+        .player1 {
+            background-color: blue;
+            color: white;
+        }
+        .player2 {
+            background-color: rgb(255, 4, 4);
+            color: white;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            margin-top: 10px; /* Ajusta este valor según sea necesario */
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¿Están listos?</h1>
+        <label for="text-color">Color del texto:</label>
+        <input type="color" id="text-color" name="text-color" value="#ffffff">
+        <div id="timer">Tiempo: 20</div>
+        <div id="turn-message"></div>
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
+        <div id="message"></div>
+        <div class="button-container">
+            <a href="facil.html" class="button" onclick="restartGame()">Reiniciar Juego</a>
+            <a href="game.html" class="button">Regresar al menu</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cells = document.querySelectorAll('.cell');
+            let currentPlayer = 'X';  
+            let timer;
+            let timeLeft = 20;
+            const winningCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            const boardState = Array(9).fill(null);
+
+            function startTimer() {
+                timeLeft = 20;
+                timer = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timer').textContent = `Tiempo restante: ${timeLeft}`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        makeRandomMove();
+                        switchPlayer();
+                    }
+                }, 1000);
+            }
+
+            function checkWin(player) {
+                return winningCombinations.some(combination => 
+                    combination.every(index => boardState[index] === player)
+                );
+            }
+
+            function makeMove(index) {
+                if (!boardState[index]) {
+                    boardState[index] = currentPlayer;
+                    cells[index].textContent = currentPlayer;
+                    cells[index].classList.add(currentPlayer === 'X' ? 'player1' : 'player2');
+                    if (checkWin(currentPlayer)) {
+                        clearInterval(timer);
+                        document.getElementById('message').textContent = `${currentPlayer} gana!`;
+                        return;
+                    }
+                    if (boardState.every(cell => cell)) {
+                        clearInterval(timer);
+                        document.getElementById('message').textContent = 'Empate!';
+                        return;
+                    }
+                    switchPlayer();
+                    updateTurnMessage();
+                    if (currentPlayer === 'O') {
+                        setTimeout(() => makeRandomMove(), 500);  
+                    }
+                }
+            }
+
+            function makeRandomMove() {
+                const emptyCells = boardState
+                    .map((cell, index) => cell ? null : index)
+                    .filter(index => index !== null);
+                const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                makeMove(randomIndex);
+            }
+
+            function switchPlayer() {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                startTimer();
+            }
+
+            function updateTurnMessage() {
+                const textColor = document.getElementById('text-color').value;
+                document.getElementById('turn-message').style.color = textColor;
+                document.getElementById('turn-message').textContent = `Turno de ${currentPlayer === 'X' ? 'Jugador 1' : 'IA'}`;
+            }
+
+            cells.forEach((cell, index) => {
+                cell.addEventListener('click', () => {
+                    clearInterval(timer);
+                    makeMove(index);
+                });
+            });
+
+            function restartGame() {
+                window.location.reload(); 
+            }
+
+            startTimer();
+            updateTurnMessage();
+        });
+    </script>
+</body>
+</html>

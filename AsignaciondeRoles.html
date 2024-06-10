@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignación de rol</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        .card {
+            background-color: black;
+            color: white;
+            border: 1px solid white;
+        }
+        h1 {
+            font-family: 'Cursive', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center"> </h1>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"> Asignacion de rol</h5>
+                        <p class="card-text">Los roles de Gato y Ratón serán asignados aleatoriamente.</p>
+                        <p class="card-text">Espere un momento mientras se asignan los roles y los scripts cargan...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlace a Bootstrap JS (opcional, si necesitas funcionalidades de Bootstrap) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+V5Aq+6qAOWCrEN0L4/3O5j8q0AC5b5K8HFeGUgllUyX5Z6QUpJvAB7jzK" crossorigin="anonymous"></script>
+    <script>
+        // Simular la asignación de roles después de un breve retraso
+        setTimeout(function() {
+            // Generar un número aleatorio entre 0 y 1
+            const random = Math.random();
+            // Si el número es mayor o igual a 0.5, asignar el rol de Gato, de lo contrario, asignar el rol de Ratón
+            const role = random >= 0.5 ? 'Gato' : 'Ratón';
+            // Redireccionar a la página correspondiente según el rol asignado
+            window.location.href = role === 'Dificultad' ? 'Dificultad.html' : 'Dificultad.html';
+        }, 3000); // Esperar 3 segundos antes de asignar los roles (puedes ajustar este valor según tus necesidades)
+    </script>
+</body>
+</html>
